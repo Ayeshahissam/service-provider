@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Login and Sign-Up Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            display: none;
+        }
+        .box.active {
+            display: block;
+        }
+        .box h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .box .user-box {
+            margin-bottom: 15px;
+        }
+        .box .user-box input,
+        .box .user-box select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-container {
+            text-align: center;
+        }
+        .btn-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .btn-container button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginBox" class="box active">
+        <h2>Login</h2>
+        <div id="loginMessage" class="message"></div>
+        <form id="loginForm">
+            <div class="user-box">
+                <input type="text" name="username" id="loginUsername" placeholder="Username" required>
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" id="loginPassword" placeholder="Password" required>
+            </div>
+            <div class="btn-container">
+                <button type="submit">Login</button>
+                <button type="button" id="showSignUp">Sign Up</button>
+            </div>
+        </form>
+    </div>
+    
+    <div id="signupBox" class="box">
+        <h2>Sign Up</h2>
+        <div id="signupMessage" class="message"></div>
+        <form id="signupForm">
+            <div class="user-box">
+                <input type="text" name="fullname" id="fullname" placeholder="Full Name" required>
+            </div>
+            <div class="user-box">
+                <input type="text" name="username" id="signupUsername" placeholder="Username" required>
+            </div>
+            <div class="user-box">
+                <input type="email" name="email" id="email" placeholder="Email" required>
+            </div>
+            <div class="user-box">
+                <select id="serviceType" required>
+                    <option value="" disabled selected>Select Service Type</option>
+                    <option value="carwash">Car wash</option>
+                    <option value="mechanic">Mechanic</option>
+                    <option value="lawncare">Lawn Care</option>
+                    <option value="makeup">Makeup Artist</option>
+                    <option value="oilchange">Oil Change</option>
+                    <option value="trainer">Personal Trainer</option>
+                    <option value="plumbing">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="tutor">Tutoring</option>
+                </select>
+            </div>
+            <div class="user-box">
+                <input type="number" name="rate" id="hourlyrate" placeholder="Hourly Rate (USD)" min="5" required>
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" id="signupPassword" placeholder="Password" required>
+            </div>
+            <div class="user-box">
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+            </div>
+            <div class="user-box">
+                <input type="file" name="profileImage" id="profileImage" accept="image/*" required>
+            </div>
+            <div class="btn-container">
+                <button type="submit">Sign Up</button>
+                <button type="button" id="showLogin">Back to Login</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('showSignUp').addEventListener('click', function() {
+            document.getElementById('loginBox').classList.remove('active');
+            document.getElementById('signupBox').classList.add('active');
+        });
+
+        document.getElementById('showLogin').addEventListener('click', function() {
+            document.getElementById('signupBox').classList.remove('active');
+            document.getElementById('loginBox').classList.add('active');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+    
+            fetch('http://localhost:8000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const loginMessage = document.getElementById('loginMessage');
+                if (data.status === 'success') {
+                    loginMessage.className = 'message success';
+                    loginMessage.textContent = 'Login successful!';
+                    loginMessage.style.display = 'block';
+                    localStorage.setItem('user', JSON.stringify(data.user)); // Save user data to local storage
+                    document.cookie = "user_token=user-token"; // Set the cookie
+                    setTimeout(() => {
+                        window.location.href = '/freelancerDashboard';
+                    }, 1000);
+                } else {
+                    loginMessage.className = 'message error';
+                    loginMessage.textContent = 'Login failed: ' + data.detail;
+                    loginMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const loginMessage = document.getElementById('loginMessage');
+                loginMessage.className = 'message error';
+                loginMessage.textContent = 'Login failed: ' + error.message;
+                loginMessage.style.display = 'block';
+            });
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const serviceType = document.getElementById('serviceType').value;
+            const fullname = document.getElementById('fullname').value;
+            const username = document.getElementById('signupUsername').value;
+            const hourlyrate = document.getElementById('hourlyrate').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const profileImage = document.getElementById('profileImage').files[0];
+        
+            // Regex patterns
+            const usernamePattern = /^[a-zA-Z0-9]{4,10}$/;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        
+            // Validate inputs
+            if (!usernamePattern.test(username)) {
+                alert('Username must be 4-10 characters long and contain only letters and numbers.');
+                return;
+            }
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            if (!passwordPattern.test(password)) {
+                alert('Password must be at least 8 characters long and contain at least one letter and one number.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                return;
+            }
+        
+            const formData = new FormData();
+            formData.append('serviceType', serviceType);
+            formData.append('fullname', fullname);
+            formData.append('username', username);
+            formData.append('hourlyrate', hourlyrate);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('confirmPassword', confirmPassword);
+            formData.append('profileImage', profileImage);
+        
+            fetch('http://localhost:8000/signup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const signupMessage = document.getElementById('signupMessage');
+                if (data.inserted) {
+                    signupMessage.className = 'message success';
+                    signupMessage.textContent = 'Sign-up successful!';
+                    signupMessage.style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('signupBox').classList.remove('active');
+                        document.getElementById('loginBox').classList.add('active');
+                    }, 1000);
+                } else {
+                    signupMessage.className = 'message error';
+                    signupMessage.textContent = 'Sign-up failed';
+                    signupMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const signupMessage = document.getElementById('signupMessage');
+                signupMessage.className = 'message error';
+                signupMessage.textContent = 'Sign-up failed: ' + error.message;
+                signupMessage.style.display = 'block';
+            });
+        });
+        
+    </script>
+</body>
+</html>

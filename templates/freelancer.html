@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/website.css') }}">
+    <style>
+        .service-description {
+            padding: 20px;
+        }
+        .service-image img {
+            width: 100%;
+            height: auto;
+        }
+        .service-description h2 {
+            margin-top: 20px;
+        }
+        .service-description p {
+            margin: 15px 0;
+        }
+        .service-description .btn {
+            margin-top: 10px;
+        }
+        .notification-container {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .notification-container h4 {
+            margin-bottom: 15px;
+        }
+        .notification-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notification-item p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">Local Xperts</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutus.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contactus.html">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <span id="username" class="nav-link"></span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-danger nav-link" id="delete-account">Delete Account</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-secondary nav-link" id="logout">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+    <div class="container">
+        <h2>Freelancer Dashboard</h2>
+        <div class="notification-container">
+            <h4>Notifications</h4>
+            <div id="notification-list">
+                <!-- Notifications will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.username) {
+                document.getElementById('username').textContent = `Welcome, ${user.username}`;
+                const response = await fetch(`http://localhost:8000/notifications?username=${user.username}`);
+                const notifications = await response.json();
+                const notificationList = document.getElementById('notification-list');
+                notifications.forEach(notification => {
+                    const notificationItem = document.createElement('div');
+                    notificationItem.className = 'notification-item';
+                    notificationItem.innerHTML = `
+                        <p><strong>${notification.details.customerName}</strong> has booked you for a job.</p>
+                        <p><small>${notification.details.serviceDate} at ${notification.details.serviceTime}</small></p>
+                        <br>
+                        <p><strong>Additional Notes: </strong>${notification.details.additionalNotes}
+                    `;
+                    notificationList.appendChild(notificationItem);
+                });
+            } else {
+                window.location.href = '/freelancersignup';
+            }
+        });
+    
+        document.getElementById('logout').addEventListener('click', function() {
+            fetch('http://localhost:8000/logout', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Logout successful');
+                    localStorage.removeItem('user');
+                    window.location.href = '/homepage';
+                } else {
+                    alert('Logout failed');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    
+        document.getElementById('delete-account').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                const username = prompt('Please enter your username to confirm:');
+                const password = prompt('Please enter your password to confirm:');
+                if (username && password) {
+                    fetch('http://localhost:8000/delete', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.delete) {
+                            alert('Account deleted successfully.');
+                            localStorage.removeItem('user');
+                            window.location.href = '/homepage';
+                        } else {
+                            alert('Failed to delete account: ' + data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>

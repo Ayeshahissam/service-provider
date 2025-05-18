@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrician</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/website.css') }}">
+    <style>
+        .flip-card {
+            background-color: transparent;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        .hidden-label {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .title {
+            font-size: 1.5em;
+            font-weight: 900;
+            text-align: center;
+            margin: 0;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border: 1px solid rgb(0, 0, 0);
+            border-radius: 1rem;
+        }
+
+        .flip-card-front {
+            background: white;
+            color: rgb(0, 0, 0);
+        }
+
+        .flip-card-back {
+            background: black;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+        }
+
+        .profile-info {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stars-outer {
+            display: inline-block;
+            position: relative;
+            font-family: FontAwesome;
+        }
+        .stars-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .stars-inner::before {
+            content: "\f005 \f005 \f005 \f005 \f005";
+            color: #f8ce0b;
+        }
+        .stars-outer::before {
+            content: "\f005 \f005 \f005 \f005 \f005";
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">Local Xperts</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Services
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/homeservices">Home Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/plumbing">Plumbing</a></li>
+                                    <li><a class="dropdown-item" href="/electrician">Electrical</a></li>
+                                    <li><a class="dropdown-item" href="/lawncare">Lawn Care</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/automotiveservices">Automotive Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/carwash">Car Wash</a></li>
+                                    <li><a class="dropdown-item" href="/carrepair">Car Repair</a></li>
+                                    <li><a class="dropdown-item" href="/oilchange">Oil Change</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/personalservices">Personal Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/tutor">Tutoring</a></li>
+                                    <li><a class="dropdown-item" href="/personaltraining">Personal Training</a></li>
+                                    <li><a class="dropdown-item" href="/makeup">Makeup Services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/aboutus">About Us</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contactus">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/freelancersignup">Sign Up As Freelancer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br><br>
+    <div class="container">
+        <h2 class="text-center" style="letter-spacing: 3px; margin-top: 20px;">Electrician Service Providers</h2>
+        <br>
+        <div class="row justify-content-center">
+            {% for freelancer in freelancers %}
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="{{ url_for('static', path=freelancer.profileImage) }}" alt="{{ freelancer.fullname }}" class="card-img-top profile-pic">
+                        <p class="title">{{ freelancer.fullname }}</p>
+                        <p>{{ freelancer.electricianHeadings }}</p>
+                        <p>{{ freelancer.rating}}</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="profile-info">
+                            <p class="title">{{ freelancer.fullname }}</p>
+                            <p>{{ freelancer.electricianHeadings }}</p>
+                            <p>{{ freelancer.electricianDescriptions }}</p>
+                            <p> Hourly Rate : ${{freelancer.hourlyrate}}
+                            <input type="hidden" class="freelancer-username" value="{{ freelancer.username }}">
+                            <br>
+                            <br>
+                            <button class="btn btn-light hire-btn" data-name="{{ freelancer.fullname }}" data-username="{{ freelancer.username }}" style="border-radius:15px;">Hire Now!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalLabel">Book a Service</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="form-group">
+                            <label for="providerName">Service Provider</label>
+                            <input type="text" class="form-control" id="providerName" name="providerName" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="providerUsername" class="hidden-label">Provider Username</label>
+                            <input type="hidden" class="form-control" id="providerUsername" name="providerUsername">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerName">Your Name</label>
+                            <input type="text" class="form-control" id="customerName" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Your Email</label>
+                            <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Your Phone Number</label>
+                            <input type="tel" class="form-control" id="customerPhone" name="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceDate">Service Date</label>
+                            <input type="date" class="form-control" id="serviceDate" name="serviceDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceTime">Service Time</label>
+                            <input type="time" class="form-control" id="serviceTime" name="serviceTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="additionalNotes">Additional Notes</label>
+                            <textarea class="form-control" id="additionalNotes" name="additionalNotes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('.hire-btn').on('click', function() {
+                const providerName = $(this).data('name');
+                const providerUsername = $(this).data('username');
+                $('#providerName').val(providerName);
+                $('#providerUsername').val(providerUsername);
+                $('#bookingModal').modal('show');
+            });
+        
+            document.getElementById('bookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+        
+                const bookingData = {
+                    providerName: document.getElementById('providerName').value,
+                    providerUsername: document.getElementById('providerUsername').value,
+                    customerName: document.getElementById('customerName').value,
+                    customerEmail: document.getElementById('customerEmail').value,
+                    customerPhone: document.getElementById('customerPhone').value,
+                    serviceDate: document.getElementById('serviceDate').value,
+                    serviceTime: document.getElementById('serviceTime').value,
+                    additionalNotes: document.getElementById('additionalNotes').value
+                };
+        
+                fetch('http://localhost:8000/book', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookingData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Booking successful!');
+                        $('#bookingModal').modal('hide');
+                    } else {
+                        alert('Booking failed: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+        
+    </script>
+</body>
+</html>

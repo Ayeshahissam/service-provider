@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Local Xperts</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+          }
+          
+          ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
+          
+          ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+          }
+          
+          ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+          }
+          
+          ::-webkit-scrollbar-thumb:active {
+            background: #333;
+          }
+          
+          /* Custom scrollbar styles for Firefox */
+          html {
+            scrollbar-width: thin;
+            scrollbar-color: #000000 #ffffff;
+          }
+          
+          html::-webkit-scrollbar {
+            width: 8px;
+          }
+          
+          html::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
+          
+          html::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+          }
+          
+          html::-webkit-scrollbar-thumb:hover {
+            background: #555;
+          }
+          
+          html::-webkit-scrollbar-thumb:active {
+            background: #333;
+          }
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            padding: 40px;
+            transform: translate(-50%, -50%);
+            background: #181414fc;
+            box-sizing: border-box;
+            box-shadow: 0 15px 25px rgba(0,0,0,.6);
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+
+        .freelancer-width {
+            width: 700px;
+        }
+
+        .login-box .user-box {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+
+        .login-box .user-box-half {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .login-box .user-box-half .user-box {
+            width: 48%;
+        }
+
+        .login-box .user-box input, 
+        .login-box .user-box select {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            border-bottom: 1px solid #fff;
+            outline: none;
+            background: transparent;
+        }
+
+        .login-box .user-box label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            pointer-events: none;
+            transition: .5s;
+        }
+
+        .login-box .user-box input:focus ~ label,
+        .login-box .user-box input:valid ~ label,
+        .login-box .user-box select:focus ~ label,
+        .login-box .user-box select:valid ~ label {
+            top: -20px;
+            left: 0;
+            color: #bdb8b8;
+            font-size: 12px;
+        }
+
+        .login-box form .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .login-box form a {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: #ffffff;
+            font-size: 16px;
+            text-decoration: none;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: .5s;
+            margin-top: 40px;
+            letter-spacing: 4px;
+        }
+
+        .login-box a:hover {
+            background: #03f40f;
+            color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #03f40f,
+                        0 0 25px #03f40f,
+                        0 0 50px #03f40f,
+                        0 0 100px #03f40f;
+        }
+
+        .login-box a span {
+            position: absolute;
+            display: block;
+        }
+
+        @keyframes btn-anim1 {
+            0% {
+                left: -100%;
+            }
+
+            50%, 100% {
+                left: 100%;
+            }
+        }
+
+        .login-box a span:nth-child(1) {
+            bottom: 2px;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #03f40f);
+            animation: btn-anim1 2s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box" id="loginBox">
+        <form id="loginForm">
+            <center><h2 style="color:white; letter-spacing:3px;">Login</h2></center><br>
+            <div class="user-box">
+                <input type="text" name="username" id="loginUsername" required="">
+                <label>Username</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" id="loginPassword" required="">
+                <label>Password</label>
+            </div>
+            <div class="btn-container">
+                <a href="#" id="showSignUp">Sign Up<span></span></a>
+                <a href="#" id="loginBtn">Login<span></span></a>
+            </div>
+        </form>
+    </div>
+
+    <div class="login-box" id="signupBox" style="display:none;">
+        <form id="signupForm">
+            <center><h2 style="color:white; letter-spacing:3px;">Sign Up</h2></center><br>
+            <div class="user-box">
+                <select id="userType" style="background-color: #181414fc; color:white" required>
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="user">User</option>
+                    <option value="freelancer">Freelancer</option>
+                </select>
+            </div>
+            <!-- User Fields -->
+            <div class="user-fields">
+                <div class="user-box">
+                    <input type="text" name="fullname" required="">
+                    <label>Full Name</label>
+                </div>
+                <div class="user-box">
+                    <input type="text" name="username" required="">
+                    <label>Username</label>
+                </div>
+                <div class="user-box">
+                    <input type="email" name="email" required="">
+                    <label>Email</label>
+                </div>
+                <div class="user-box">
+                    <input type="password" name="password" required="">
+                    <label>Password</label>
+                </div>
+                <div class="user-box">
+                    <input type="password" name="confirm-password" required="">
+                    <label>Confirm Password</label>
+                </div>
+            </div>
+            <!-- Freelancer Fields -->
+            <div class="freelancer-fields" style="display: none;">
+                <div class="user-box-half">
+                    <div class="user-box">
+                        <input type="text" name="first-name" required="">
+                        <label>First Name</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="text" name="last-name" required="">
+                        <label>Last Name</label>
+                    </div>
+                </div>
+                <div class="user-box">
+                    <input type="email" name="email" required="">
+                    <label>Email</label>
+                </div>
+                <div class="user-box">
+                    <input type="tel" name="phone-number" required="">
+                    <label>Phone Number</label>
+                </div>
+                <div class="user-box-half">
+                    <div class="user-box">
+                        <input type="password" name="password" required="">
+                        <label>Password</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="password" name="confirm-password" required="">
+                        <label>Confirm Password</label>
+                    </div>
+                </div>
+                <div class="user-box">
+                    <input type="number" name="hourly-rate" required="">
+                    <label>Hourly Rate</label>
+                </div>
+                <div class="user-box">
+                    <select name="location" style="background-color: #181414fc; color:white" required>
+                        <option value="" disabled selected>Select Location</option>
+                        <option value="bahria-phase-7">Bahria Phase 7</option>
+                        <option value="askari-14">Askari 14</option>
+                        <option value="f6">F6</option>
+                        <option value="i8-markaz">I8 Markaz</option>
+                        <option value="westridge">Westridge</option>
+                    </select>
+                </div>
+                <div class="user-box">
+                    <select name="service-type" style="background-color: #181414fc; color:white;" required>
+                        <option value="" disabled selected>Select Service Type</option>
+                        <option value="car-wash">Car Wash</option>
+                        <option value="mechanic">Mechanic</option>
+                        <option value="personal-training">Personal Trainer</option>
+                        <option value="makeup-artist">Makeup Artist</option>
+                        <option value="oil-change">Oil Change</option>
+                        <option value="tutor">Tutoring</option>
+                        <option value="plumber">Plumbing</option>
+                        <option value="electrician">Electrician</option>
+                        <option value="lawn-care">Lawn Care</option>
+
+
+
+                    </select>
+                </div>
+            </div>
+            <div class="btn-container">
+                <a href="homepage.html" id="showLogin">Login<span></span></a>
+                <a href="#" id="signUpBtn">Sign Up<span></span></a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Switch to sign up form
+            document.getElementById('showSignUp').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('signupBox').style.display = 'block';
+            });
+
+            // Switch to login form
+            document.getElementById('showLogin').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('signupBox').style.display = 'none';
+                document.getElementById('loginBox').style.display = 'block';
+            });
+
+            // Handle login
+            document.getElementById('loginBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    // Handle login response
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle sign up
+            document.getElementById('signUpBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const userType = document.getElementById('userType').value;
+
+                let formData = {};
+
+                if (userType === 'user') {
+                    formData = {
+                        userType,
+                        fullname: document.querySelector('.user-fields [name="fullname"]').value,
+                        username: document.querySelector('.user-fields [name="username"]').value,
+                        email: document.querySelector('.user-fields [name="email"]').value,
+                        password: document.querySelector('.user-fields [name="password"]').value,
+                        confirmPassword: document.querySelector('.user-fields [name="confirm-password"]').value
+                    };
+                } else if (userType === 'freelancer') {
+                    formData = {
+                        userType,
+                        firstName: document.querySelector('.freelancer-fields [name="first-name"]').value,
+                        lastName: document.querySelector('.freelancer-fields [name="last-name"]').value,
+                        email: document.querySelector('.freelancer-fields [name="email"]').value,
+                        phoneNumber: document.querySelector('.freelancer-fields [name="phone-number"]').value,
+                        password: document.querySelector('.freelancer-fields [name="password"]').value,
+                        confirmPassword: document.querySelector('.freelancer-fields [name="confirm-password"]').value,
+                        hourlyRate: document.querySelector('.freelancer-fields [name="hourly-rate"]').value,
+                        location: document.querySelector('.freelancer-fields [name="location"]').value,
+                        serviceType: document.querySelector('.freelancer-fields [name="service-type"]').value
+                    };
+                }
+
+                fetch('/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    // Handle sign up response
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Show relevant fields based on user type
+            document.getElementById('userType').addEventListener('change', function() {
+                if (this.value === 'user') {
+                    document.querySelector('.user-fields').style.display = 'block';
+                    document.querySelector('.freelancer-fields').style.display = 'none';
+                    document.querySelector('.login-box').classList.remove('freelancer-width');
+                } else if (this.value === 'freelancer') {
+                    document.querySelector('.user-fields').style.display = 'none';
+                    document.querySelector('.freelancer-fields').style.display = 'block';
+                    document.querySelector('.login-box').classList.add('freelancer-width');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

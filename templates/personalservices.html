@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Services</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/website.css') }}">
+    <style>
+        .service-description {
+            padding: 20px;
+        }
+        .service-image img {
+            width: 100%;
+            height: auto;
+        }
+        .service-description h2 {
+            margin-top: 20px;
+        }
+        .service-description p {
+            margin: 15px 0;
+        }
+        .service-description .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">Local Xperts</a>
+             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Services
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/homeservices">Home Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/plumbing">Plumbing</a></li>
+                                    <li><a class="dropdown-item" href="/electrician">Electrical</a></li>
+                                    <li><a class="dropdown-item" href="/lawncare">Lawn Care</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/automotiveservices">Automotive Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/carwash">Car Wash</a></li>
+                                    <li><a class="dropdown-item" href="/carrepair">Car Repair</a></li>
+                                    <li><a class="dropdown-item" href="/oilchange">Oil Change</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/personalservices">Personal Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/tutor">Tutoring</a></li>
+                                    <li><a class="dropdown-item" href="/personaltraining">Personal Training</a></li>
+                                    <li><a class="dropdown-item" href="/makeup">Makeup Services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/aboutus">About Us</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contactus">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/freelancersignup">Sign Up As Freelancer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+    </nav>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <img src="{{ url_for('static', path='images/personal.jpg') }}" alt="Car Wash" class="img-fluid w-100" style="max-height:620px; object-position:top; object-fit:cover; width:100%;">
+            </div>
+            <div class="overlay-text">
+                <h2 style="color: rgb(255, 255, 255); text-align:center; letter-spacing:3px; font-size:40px;"><b>Personal Services</b></h2>
+                <p></p>
+
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 service-description">
+                <h2>Tutoring Service</h2>
+                <p>Our tutoring services are designed to help you achieve academic success and confidence. Our experienced and qualified tutors will work with you to identify your strengths and weaknesses, and create a personalized learning plan that meets your unique needs and goals. With a focus on guidance, support, and encouragement, our tutors will help you develop a deeper understanding of your subjects, improve your grades, and reach your full potential.</p>
+                <a href="/tutor" class="btn btn-primary">Learn More</a>
+            </div>
+            <div class="col-lg-6 service-image">
+                <img src="{{ url_for('static', path='images/tutor.jpg') }}" alt="CAR Wash Services" style="max-height:500px; object-fit:cover;width:100%;">
+            </div>
+        </div>
+        <hr style="border: 5px #998c8c solid;">
+        <div class="row">
+            <div class="col-lg-6 service-image">
+                <img src="{{ url_for('static', path='images/makeup.jpg') }}" alt="Mechanic Services" style="max-height:500px; object-fit:cover;width:100%;">
+            </div>
+            <div class="col-lg-6 service-description">
+                <h2>Makeup Services</h2>
+                <p>Our makeup services are designed to enhance your natural beauty and leave you feeling confident and radiant. Our talented makeup artists will work with you to create a personalized look that suits your individual style and preferences, whether it's a natural everyday look or a glamorous evening style. From special occasions to everyday beauty, our makeup services are tailored to meet your unique needs and make you feel like the best version of yourself.</p>
+                <a href="/makeup" class="btn btn-primary">Learn More</a>
+            </div>
+        </div>
+        <hr style="border: 5px #998c8c solid;">
+
+        <div class="row">
+            <div class="col-lg-6 service-description">
+                <h2>Personal Training</h2>
+                <p>Our personal training services are designed to help you achieve your fitness goals and maintain a healthy, active lifestyle. Our certified and experienced trainers will work with you to create a customized fitness plan that meets your individual needs and goals, whether it's weight loss, muscle gain, or improved overall health. With a focus on safety, technique, and results, our trainers will push you to reach your full potential and help you develop a lifelong commitment to fitness and wellness.</p>
+                <a href="/personaltraining" class="btn btn-primary">Learn More</a>
+            </div>
+            <div class="col-lg-6 service-image">
+                <img src="{{ url_for('static', path='images/training.jpg') }}" alt="Oil Change Services" style="max-height:500px; object-fit:cover;width:100%;">
+            </div>
+        </div>
+        <hr style="border: 5px #998c8c solid;">
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    
+</body>
+</html>

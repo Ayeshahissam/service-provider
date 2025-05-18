@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Services</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/website.css') }}">
+    <style>
+        .service-description {
+            padding: 20px;
+        }
+        .service-image img {
+            width: 100%;
+            height: auto;
+        }
+        .service-description h2 {
+            margin-top: 20px;
+        }
+        .service-description p {
+            margin: 15px 0;
+        }
+        .service-description .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">Local Xperts</a>
+             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Services
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/homeservices">Home Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/plumbing">Plumbing</a></li>
+                                    <li><a class="dropdown-item" href="/electrician">Electrical</a></li>
+                                    <li><a class="dropdown-item" href="/lawncare">Lawn Care</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/automotiveservices">Automotive Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/carwash">Car Wash</a></li>
+                                    <li><a class="dropdown-item" href="/carrepair">Car Repair</a></li>
+                                    <li><a class="dropdown-item" href="/oilchange">Oil Change</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/personalservices">Personal Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/tutor">Tutoring</a></li>
+                                    <li><a class="dropdown-item" href="/personaltraining">Personal Training</a></li>
+                                    <li><a class="dropdown-item" href="/makeup">Makeup Services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/aboutus">About Us</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contactus">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/freelancersignup">Sign Up As Freelancer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+    </nav>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <img src="{{ url_for('static', path='images/homeservices1.jpg') }}" alt="Car Wash" class="img-fluid w-100" style="max-height:580px; object-position:top; object-fit:cover; width:100%;">
+            </div>
+            <div class="overlay-text">
+                <h2 style="color: white; text-align:center; letter-spacing:3px; font-size:40px;"><b>Home Services</b></h2>
+                <p></p>
+
+            </div>
+        </div>
+    </div>
+    <hr style="border: 5px #998c8c solid;">
+    <br><br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 service-description">
+                <h2>Plumbing Services</h2>
+                <p>Our professional plumbing services ensure that your pipes and fixtures are installed, repaired, and maintained to the highest standards. We handle everything from leaks and blockages to complete plumbing installations.</p>
+                <a href="/plumbing" class="btn btn-primary">Learn More</a>
+            </div>
+            <div class="col-lg-6 service-image">
+                <img src="{{ url_for('static', path='images/plumbing.jpg') }}" alt="Plumbing Services">
+            </div>
+        </div>
+        <hr style="border: 5px #998c8c solid;">
+        <div class="row">
+            <div class="col-lg-6 service-image">
+                <img src="{{ url_for('static', path='images/electrical.jpg') }}" alt="Electrical Services">
+            </div>
+            <div class="col-lg-6 service-description">
+                <h2>Electrical Services</h2>
+                <p>We provide expert electrical services for your home, including wiring, lighting installation, and repair. Our certified electricians ensure your electrical systems are safe and efficient.</p>
+                <a href="/electrician" class="btn btn-primary">Learn More</a>
+            </div>
+        </div>
+        <hr style="border: 5px #998c8c solid;">
+
+        <div class="row">
+            <div class="col-lg-6 service-description">
+                <h2>Lawn Care Services</h2>
+                <p>Our lawn care services help you maintain a beautiful and healthy lawn. From mowing and fertilizing to weed control and landscaping, we offer comprehensive lawn care solutions.</p>
+                <a href="/lawncare" class="btn btn-primary">Learn More</a>
+            </div>
+            <div class="col-lg-6 service-image">
+                <img src="{{ url_for('static', path='images/lawn.jpg') }}" alt="Lawn Care Services">
+            </div>
+        </div>
+        <hr style="border: 5px #998c8c solid;">
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

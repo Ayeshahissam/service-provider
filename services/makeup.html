@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makeup Services</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/website.css">
+    <style>
+        .flip-card {
+            background-color: transparent;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            font-family: sans-serif;
+            margin: 20px;
+        }
+
+        .title {
+            font-size: 1.5em;
+            font-weight: 900;
+            text-align: center;
+            margin: 0;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border: 1px solid rgb(0, 0, 0);
+            border-radius: 1rem;
+        }
+
+        .flip-card-front {
+            background: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+        .flip-card-back {
+            background: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
+            transform: rotateY(180deg);
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+        }
+
+        .profile-info {
+            text-align: center;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage.html">Local Xperts</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Services
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/homeservices.html">Home Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="plumbing.html">Plumbing</a></li>
+                                    <li><a class="dropdown-item" href="electrician.html">Electrical</a></li>
+                                    <li><a class="dropdown-item" href="lawn_care.html">Lawn Care</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/automotiveservices.html">Automotive Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="car_wash.html">Car Wash</a></li>
+                                    <li><a class="dropdown-item" href= "mechanic.html">Car Repair</a></li>
+                                    <li><a class="dropdown-item" href="oil_change.html">Oil Change</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="/personalservices.html">Personal Services</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="tutor.html">Tutoring</a></li>
+                                    <li><a class="dropdown-item" href="personal_training.html">Personal Training</a></li>
+                                    <li><a class="dropdown-item" href="makeup.html">Makeup Services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/aboutus.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contactus.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br><br>
+
+    <div class="container">
+        <h2 class="text-center" style="letter-spacing: 3px; margin-top: 20px;">Makeup Service Providers</h2>
+        <br>
+        <div class="row justify-content-center">
+          <!-- Service Provider 1 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="/images/man.png" alt="Alex Johnson" class="profile-pic">
+                        <p class="title">Alex Johnson</p>
+                        <p>Professional Makeup Artist</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="profile-info">
+                            <p class="title">Alex Johnson</p>
+                            <p>Professional Makeup Artist</p>
+                            <p>Alex has been a professional makeup artist for over 8 years, specializing in bridal and event makeup.</p>
+                            <button class="btn btn-light hire-btn" data-toggle="modal" data-target="#bookingModal" data-name="Mike Johnson" style="border-radius:15px;">Hire Now!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Service Provider 2 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="/images/woman.png" alt="Emma Williams" class="profile-pic">
+                        <p class="title">Emma Williams</p>
+                        <p>Beauty Consultant</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="profile-info">
+                            <p class="title">Emma Williams</p>
+                            <p>Beauty Consultant</p>
+                            <p>Emma is a certified beauty consultant with a passion for skincare and makeup, helping clients look their best.</p>
+                            <button class="btn btn-light hire-btn" data-toggle="modal" data-target="#bookingModal" data-name="Mike Johnson" style="border-radius:15px;">Hire Now!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Service Provider 3 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="/images/man.png" alt="Sophia Brown" class="profile-pic">
+                        <p class="title">Sophia Brown</p>
+                        <p>Freelance Makeup Artist</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="profile-info">
+                            <p class="title">Sophia Brown</p>
+                            <p>Freelance Makeup Artist</p>
+                            <p>Sophia has been freelancing as a makeup artist for 5 years, known for her creative and innovative makeup styles.</p>
+                            <button class="btn btn-light hire-btn" data-toggle="modal" data-target="#bookingModal" data-name="Mike Johnson" style="border-radius:15px;">Hire Now!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalLabel">Book a Service</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="form-group">
+                            <label for="providerName">Service Provider</label>
+                            <input type="text" class="form-control" id="providerName" name="providerName" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerName">Your Name</label>
+                            <input type="text" class="form-control" id="customerName" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Your Email</label>
+                            <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Your Phone Number</label>
+                            <input type="tel" class="form-control" id="customerPhone" name="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceDate">Service Date</label>
+                            <input type="date" class="form-control" id="serviceDate" name="serviceDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceTime">Service Time</label>
+                            <input type="time" class="form-control" id="serviceTime" name="serviceTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="additionalNotes">Additional Notes</label>
+                            <textarea class="form-control" id="additionalNotes" name="additionalNotes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

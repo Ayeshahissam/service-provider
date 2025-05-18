@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/website.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+       
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 2px;
+        }
+        .navbar a:hover {
+            background-color: brown;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: black;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .btn-container {
+            text-align: center;
+        }
+        .btn-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .btn-container button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"], input[type="number"], input[type="date"], input[type="time"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        async function handleFormSubmit(event, method, url, rowId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            formData.append('method_override', method);
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                if (method === 'DELETE') {
+                    document.getElementById(rowId).remove();
+                } else if (method === 'PUT') {
+                    const data = await response.json();
+                    if (data.serviceType) {
+                        document.getElementById(`serviceType-${rowId}`).textContent = data.serviceType;
+                    }
+                    if (data.email) {
+                        document.getElementById(`email-${rowId}`).textContent = data.email;
+                    }
+                    if (data.hourlyrate) {
+                        document.getElementById(`hourlyrate-${rowId}`).textContent = data.hourlyrate;
+                    }
+                    if (data.fullname) {
+                        document.getElementById(`fullname-${rowId}`).textContent = data.fullname;
+                    }
+                }
+            } else {
+                const errorData = await response.json();
+                alert('Error: ' + errorData.detail);
+            }
+        }
+
+        async function handleLogout() {
+            const response = await fetch('/admin/logout', { method: 'POST' });
+            if (response.ok) {
+                window.location.href = '/admin/login';
+            } else {
+                alert('Logout failed');
+            }
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">Local Xperts</a>
+            <a href="#" onclick="handleLogout()" style = "color : black">Logout</a>
+        </div>    
+    </nav>
+    <br>
+    
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <h2>Freelancers</h2>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Service Type</th>
+                <th>Hourly Rate</th>
+                <th>Actions</th>
+            </tr>
+            {% for freelancer in freelancers %}
+            <tr id="freelancer-{{ freelancer.username }}">
+                <td>{{ freelancer.username }}</td>
+                <td id="fullname-{{ freelancer.username }}">{{ freelancer.fullname }}</td>
+                <td id="email-{{ freelancer.username }}">{{ freelancer.email }}</td>
+                <td id="serviceType-{{ freelancer.username }}">{{ freelancer.serviceType }}</td>
+                <td id="hourlyrate-{{ freelancer.username }}">{{ freelancer.hourlyrate }}</td>
+                <td>
+                    <form onsubmit="handleFormSubmit(event, 'DELETE', '/admin/delete_freelancer/{{ freelancer.username }}', 'freelancer-{{ freelancer.username }}')">
+                        <div class="btn-container">
+                            <button type="submit">Delete</button>
+                        </div>
+                    </form>
+                    <form onsubmit="handleFormSubmit(event, 'PUT', '/admin/update_freelancer/{{ freelancer.username }}', '{{ freelancer.username }}')">
+                        <input type="text" name="fullname" value="{{ freelancer.fullname }}" placeholder="Full Name">
+                        <input type="text" name="serviceType" value="{{ freelancer.serviceType }}" placeholder="Service Type">
+                        <input type="text" name="email" value="{{ freelancer.email }}" placeholder="Email">
+                        <input type="number" name="hourlyrate" value="{{ freelancer.hourlyrate }}" placeholder="Hourly Rate">
+                        <div class="btn-container">
+                            <button type="submit">Update</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Bookings</h2>
+        <table>
+            <tr>
+                <th>Provider Name</th>
+                <th>Customer Name</th>
+                <th>Customer Email</th>
+                <th>Customer Phone</th>
+                <th>Service Date</th>
+                <th>Service Time</th>
+                <th>Additional Notes</th>
+                <th>Actions</th>
+            </tr>
+            {% for booking in bookings %}
+            <tr id="booking-{{ booking._id }}">
+                <td>{{ booking.providerName }}</td>
+                <td>{{ booking.customerName }}</td>
+                <td>{{ booking.customerEmail }}</td>
+                <td>{{ booking.customerPhone }}</td>
+                <td>{{ booking.serviceDate }}</td>
+                <td>{{ booking.serviceTime }}</td>
+                <td>{{ booking.additionalNotes }}</td>
+                <td>
+                    <form onsubmit="handleFormSubmit(event, 'DELETE', '/admin/delete_booking/{{ booking._id }}', 'booking-{{ booking._id }}')">
+                        <div class="btn-container">
+                            <button type="submit">Delete</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Customer Queries</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact No</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+            {% for query in queries %}
+            <tr id="query-{{ query._id }}">
+                <td>{{ query.name }}</td>
+                <td>{{ query.email }}</td>
+                <td>{{ query.contact_no }}</td>
+                <td>{{ query.message }}</td>
+                <td>
+                    <form onsubmit="handleFormSubmit(event, 'DELETE', '/admin/delete_query/{{ query._id }}', 'query-{{ query._id }}')">
+                        <div class="btn-container">
+                            <button type="submit">Delete</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
