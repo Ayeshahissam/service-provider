@@ -286,6 +286,89 @@ EOF
             }
         }
         
+        stage('Deploy Application') {
+            steps {
+                echo 'Deploying Service Provider Application...'
+                
+                script {
+                    try {
+                        // Stop any existing containers
+                        sh '''
+                            echo "Stopping any existing containers..."
+                            docker-compose down || true
+                        '''
+                        
+                        // Start the application
+                        sh '''
+                            echo "Starting Service Provider Application..."
+                            docker-compose up -d
+                        '''
+                        
+                        // Wait for services to be ready
+                        sh '''
+                            echo "Waiting for services to start..."
+                            sleep 30
+                            
+                            echo "=== Checking service status ==="
+                            docker-compose ps
+                            
+                            echo "=== Checking if web service is responding ==="
+                            if docker-compose ps | grep "service-provider-web" | grep -q "Up"; then
+                                echo "✅ Web service is running"
+                            else
+                                echo "❌ Web service failed to start"
+                                docker-compose logs web
+                                exit 1
+                            fi
+                            
+                            if docker-compose ps | grep "service-provider-mongodb" | grep -q "Up"; then
+                                echo "✅ MongoDB service is running"
+                            else
+                                echo "❌ MongoDB service failed to start"
+                                docker-compose logs mongodb
+                                exit 1
+                            fi
+                        '''
+                        
+                        // Verify application accessibility
+                        sh '''
+                            echo "=== Testing application connectivity ==="
+                            # Wait a bit more for the app to fully start
+                            sleep 10
+                            
+                            # Test if the application is responding (basic connectivity check)
+                            if curl -f -s http://localhost:8000 > /dev/null; then
+                                echo "✅ Application is responding on port 8000"
+                            else
+                                echo "⚠️  Application may still be starting up or check if port 8000 is accessible"
+                                echo "Showing recent logs:"
+                                docker-compose logs --tail=20 web
+                            fi
+                        '''
+                        
+                    } catch (Exception e) {
+                        echo "Deployment failed: ${e}"
+                        
+                        // Show logs for debugging
+                        sh '''
+                            echo "=== Docker Compose Services Status ==="
+                            docker-compose ps || true
+                            
+                            echo "=== Web Service Logs ==="
+                            docker-compose logs web || true
+                            
+                            echo "=== MongoDB Service Logs ==="
+                            docker-compose logs mongodb || true
+                        '''
+                        
+                        error "Application deployment failed"
+                    }
+                }
+                
+                echo 'Application deployed successfully!'
+            }
+        }
+        
         stage('Archive Artifacts') {
             steps {
                 echo 'Archiving build artifacts...'
@@ -319,7 +402,7 @@ EOF
         success {
             echo '''
             ╔══════════════════════════════════════════════════════════════╗
-            ║                    🎉 BUILD SUCCESSFUL! 🎉                   ║
+            ║                🎉 BUILD & DEPLOYMENT SUCCESSFUL! 🎉          ║
             ╠══════════════════════════════════════════════════════════════╣
             ║                                                              ║
             ║  ✅ Source code fetched from repository                      ║
@@ -327,14 +410,15 @@ EOF
             ║  ✅ Application built and validated                          ║
             ║  ✅ Docker image created successfully                        ║
             ║  ✅ Security checks completed                                ║
-            ║  ✅ Deployment artifacts ready                               ║
+            ║  ✅ Application deployed and running                         ║
             ║                                                              ║
-            ║  🚀 Ready for deployment!                                    ║
+            ║  🚀 APPLICATION IS NOW LIVE!                                 ║
             ║                                                              ║
-            ║  Next steps:                                                 ║
-            ║  1. Use deployment-artifacts/deploy.sh to deploy            ║
-            ║  2. Access application at http://localhost:8000              ║
-            ║  3. MongoDB available at localhost:27017                    ║
+            ║  Access your application:                                    ║
+            ║  🌐 Web App: http://YOUR_EC2_IP:8000                         ║
+            ║  🗄️  MongoDB: YOUR_EC2_IP:27017                             ║
+            ║                                                              ║
+            ║  ⚠️  Make sure port 8000 is open in EC2 Security Group      ║
             ║                                                              ║
             ╚══════════════════════════════════════════════════════════════╝
             '''
