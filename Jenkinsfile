@@ -74,13 +74,10 @@ pipeline {
                 
                 script {
                     try {
-                        // Try pip3 first, fallback to pip
+                        // Use python3 -m pip for better compatibility with Python 3.11
                         sh '''
-                            if command -v pip3 >/dev/null 2>&1; then
-                                pip3 install --user -r requirements.txt
-                            else
-                                pip install --user -r requirements.txt
-                            fi
+                            echo "Installing dependencies using python3 -m pip..."
+                            python3 -m pip install --user -r requirements.txt
                         '''
                     } catch (Exception e) {
                         echo "Failed to install dependencies: ${e}"
