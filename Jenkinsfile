@@ -88,10 +88,14 @@ pipeline {
                     cd source
                     echo "Starting deployment..."
                     
-                    # Stop existing containers
-                    docker-compose down || true
+                    # Force stop and remove existing containers
+                    echo "Stopping and removing existing containers..."
+                    docker-compose down --remove-orphans || true
+                    docker stop service-provider-mongodb service-provider-web || true
+                    docker rm service-provider-mongodb service-provider-web || true
                     
                     # Start new containers
+                    echo "Starting new containers..."
                     docker-compose up -d
                     
                     echo "Waiting for services to start..."
