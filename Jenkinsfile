@@ -5,9 +5,6 @@ pipeline {
         // Skip default checkout
         skipDefaultCheckout true
         
-        // Clean workspace before build starts
-        skipStagesAfterUnstable()
-        
         // Workspace cleanup options
         disableConcurrentBuilds()
         
@@ -32,48 +29,16 @@ pipeline {
     }
     
     stages {
-        stage('Pre-Build Cleanup') {
-            steps {
-                script {
-                    echo 'Performing aggressive workspace cleanup...'
-                    
-                    // Force stop any running containers that might be using workspace files
-                    sh '''
-                        echo "Stopping any running containers..."
-                        docker-compose down --remove-orphans || true
-                        docker stop $(docker ps -aq) || true
-                    '''
-                    
-                    // Clean workspace with sudo if needed (for permission issues)
-                    sh '''
-                        echo "Cleaning workspace..."
-                        # Try normal cleanup first
-                        rm -rf ./* ./.[^.]* 2>/dev/null || true
-                        
-                        # If that fails, try with sudo (this handles permission issues)
-                        if [ "$(ls -A . 2>/dev/null)" ]; then
-                            echo "Normal cleanup failed, trying with elevated permissions..."
-                            sudo rm -rf ./* ./.[^.]* 2>/dev/null || true
-                        fi
-                        
-                        # Verify workspace is clean
-                        ls -la || echo "Workspace cleaned successfully"
-                    '''
-                }
-            }
-        }
-        
         stage('Checkout') {
             steps {
                 echo 'Fetching source code from GitHub repository...'
                 
-                // Checkout with explicit configuration
+                // Simple checkout without aggressive cleanup
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: '*/master']],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [
-                        [$class: 'CleanBeforeCheckout'],
                         [$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false]
                     ],
                     submoduleCfg: [],
@@ -432,24 +397,7 @@ EOF
     
     post {
         always {
-            script {
-                echo 'Pipeline execution completed'
-                
-                // Final cleanup to prevent workspace permission issues in future builds
-                sh '''
-                    echo "Performing final workspace cleanup..."
-                    # Stop any containers that might be holding files
-                    docker-compose down --remove-orphans || true
-                    
-                    # Clean up any generated files with elevated permissions if needed
-                    find . -type f -name "*.log" -exec sudo rm -f {} \\; 2>/dev/null || true
-                    find . -type d -name "__pycache__" -exec sudo rm -rf {} \\; 2>/dev/null || true
-                    
-                    # Reset permissions on workspace
-                    sudo chown -R jenkins:jenkins . 2>/dev/null || true
-                    sudo chmod -R 755 . 2>/dev/null || true
-                ''' 
-            }
+            echo 'Pipeline execution completed'
         }
         
         success {
@@ -490,7 +438,10 @@ EOF
                 ║  - Docker daemon not running                                 ║
                 ║  - Syntax errors in Python files                            ║
                 ║  - Network connectivity issues                               ║
-                ║  - Workspace permission issues                               ║
+                ║  - Workspace permission issues (manual cleanup needed)      ║
+                ║                                                              ║
+                ║  💡 To manually clean workspace on EC2:                     ║
+                ║     sudo rm -rf /var/lib/jenkins/workspace/serviceprovider  ║
                 ║                                                              ║
                 ╚══════════════════════════════════════════════════════════════╝
                 '''
