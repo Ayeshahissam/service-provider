@@ -22,12 +22,14 @@ pipeline {
             steps {
                 echo 'Fetching source code from GitHub repository...'
                 
-                // Clean workspace and Docker cache for fresh build
-                deleteDir()
+                // Clean workspace with proper permissions and Docker cache for fresh build
                 sh '''
+                    echo "Cleaning workspace with proper permissions..."
+                    sudo rm -rf /var/lib/jenkins/workspace/serviceprovider || true
                     echo "Cleaning Docker system cache..."
-                    docker system prune -af --volumes || true
+                    sudo docker system prune -af --volumes || true
                 '''
+                deleteDir()
                 
                 // Checkout with explicit configuration
                 checkout([
@@ -299,8 +301,8 @@ EOF
                         // Force clean up any existing containers and cache
                         sh '''
                             echo "Cleaning up existing containers and cache..."
-                            docker-compose down -v || true
-                            docker system prune -af --volumes || true
+                            sudo docker-compose down -v || true
+                            sudo docker system prune -af --volumes || true
                         '''
                         
                         // Start the application
@@ -397,10 +399,11 @@ EOF
         always {
             echo 'Pipeline execution completed'
             
-            // Clean up workspace
+            // Clean up workspace with proper permissions
             sh '''
                 echo "Cleaning up..."
-                docker system prune -f --volumes || true
+                sudo docker system prune -f --volumes || true
+                sudo chown -R jenkins:jenkins /var/lib/jenkins/workspace/ || true
             '''
         }
         
