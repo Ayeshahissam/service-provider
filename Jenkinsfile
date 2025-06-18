@@ -22,8 +22,12 @@ pipeline {
             steps {
                 echo 'Fetching source code from GitHub repository...'
                 
-                // Clean workspace first
+                // Clean workspace and Docker cache for fresh build
                 deleteDir()
+                sh '''
+                    echo "Cleaning Docker system cache..."
+                    docker system prune -af --volumes || true
+                '''
                 
                 // Checkout with explicit configuration
                 checkout([
@@ -130,9 +134,9 @@ pipeline {
                 
                 script {
                     try {
-                        // Build Docker image
+                        // Build Docker image with no cache to ensure fresh build
                         sh """
-                            docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                            docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} .
                             docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
                         """
                         
@@ -292,10 +296,11 @@ EOF
                 
                 script {
                     try {
-                        // Stop any existing containers
+                        // Force clean up any existing containers and cache
                         sh '''
-                            echo "Stopping any existing containers..."
-                            docker-compose down || true
+                            echo "Cleaning up existing containers and cache..."
+                            docker-compose down -v || true
+                            docker system prune -af --volumes || true
                         '''
                         
                         // Start the application
