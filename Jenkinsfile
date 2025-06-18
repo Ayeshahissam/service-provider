@@ -22,13 +22,7 @@ pipeline {
             steps {
                 echo 'Fetching source code from GitHub repository...'
                 
-                // Clean workspace with proper permissions and Docker cache for fresh build
-                sh '''
-                    echo "Cleaning workspace with proper permissions..."
-                    sudo rm -rf /var/lib/jenkins/workspace/serviceprovider || true
-                    echo "Cleaning Docker system cache..."
-                    sudo docker system prune -af --volumes || true
-                '''
+                // Clean workspace for fresh build
                 deleteDir()
                 
                 // Checkout with explicit configuration
@@ -136,7 +130,7 @@ pipeline {
                 
                 script {
                     try {
-                        // Build Docker image with no cache to ensure fresh build
+                        // Build Docker image
                         sh """
                             docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} .
                             docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
@@ -298,11 +292,10 @@ EOF
                 
                 script {
                     try {
-                        // Force clean up any existing containers and cache
+                        // Stop any existing containers
                         sh '''
-                            echo "Cleaning up existing containers and cache..."
-                            sudo docker-compose down -v || true
-                            sudo docker system prune -af --volumes || true
+                            echo "Stopping any existing containers..."
+                            docker-compose down || true
                         '''
                         
                         // Start the application
@@ -398,13 +391,6 @@ EOF
     post {
         always {
             echo 'Pipeline execution completed'
-            
-            // Clean up workspace with proper permissions
-            sh '''
-                echo "Cleaning up..."
-                sudo docker system prune -f --volumes || true
-                sudo chown -R jenkins:jenkins /var/lib/jenkins/workspace/ || true
-            '''
         }
         
         success {
