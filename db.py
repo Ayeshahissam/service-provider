@@ -1,9 +1,11 @@
 import motor.motor_asyncio
 import bcrypt
 import random
+import os
 from bson import ObjectId
 
-mongoURI = "mongodb://localhost:27017"
+# Use environment variable for MongoDB URI, with fallback to Docker service name
+mongoURI = os.getenv("MONGO_URI", "mongodb://mongodb:27017")
 client = motor.motor_asyncio.AsyncIOMotorClient(mongoURI)
 
 db = client["Website"]
