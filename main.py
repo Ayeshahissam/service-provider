@@ -11,7 +11,7 @@ import db
 from typing import Optional
 import shutil
 
-
+# this is main.py file
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
