@@ -167,16 +167,6 @@ pipeline {
                     
                     // Archive artifacts
                     archiveArtifacts artifacts: 'source/test-results/**/*', allowEmptyArchive: true
-                    
-                    // Publish HTML reports if available
-                    publishHTML([
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'source/test-results',
-                        reportFiles: 'test-report.html',
-                        reportName: 'Selenium Test Report'
-                    ])
                 }
             }
         }
