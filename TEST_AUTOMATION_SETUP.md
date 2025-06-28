@@ -3,7 +3,7 @@
 ## Overview
 This document describes the automated testing implementation using Selenium WebDriver for the Local Xperts service provider platform. The testing framework includes 10 comprehensive test cases that cover all major functionality of the web application.
 
-**🌐 Live Application**: The application is deployed and accessible at [http://3.137.209.211:8000/homepage](http://3.137.209.211:8000/homepage)
+**🌐 Live Application**: The application is deployed and accessible at [http://16.24.96.75:8000/homepage](http://16.24.96.75:8000/homepage)
 
 All tests are configured to run against this live deployment, providing real-world testing validation.
 
@@ -130,7 +130,7 @@ The Jenkins pipeline now includes a comprehensive test stage that:
 pip install -r test-requirements.txt
 
 # Set base URL (defaults to your EC2 deployment)
-export BASE_URL=http://3.137.209.211:8000
+export BASE_URL=http://16.24.96.75:8000
 
 # Run all tests against your deployed application
 pytest test_service_provider.py -v
@@ -146,7 +146,7 @@ docker build -f Dockerfile.test -t service-provider-tests .
 
 # Run tests against your deployed application
 docker run --rm \
-    -e BASE_URL=http://3.137.209.211:8000 \
+    -e BASE_URL=http://16.24.96.75:8000 \
     -v "$(pwd)/test-results:/app/test-results" \
     service-provider-tests
 ```
@@ -182,7 +182,7 @@ This script will:
 - `--window-size=1920,1080`: Sets consistent screen size
 
 ### Environment Variables
-- `BASE_URL`: Application URL to test (default: http://3.137.209.211:8000)
+- `BASE_URL`: Application URL to test (default: http://16.24.96.75:8000)
 - `DISPLAY`: Virtual display for headless operation
 
 ## Test Reports
@@ -217,11 +217,11 @@ The testing framework generates comprehensive HTML reports that include:
 ### Debugging Commands:
 ```bash
 # Check application status
-curl -f -s http://3.137.209.211:8000/homepage
+curl -f -s http://16.24.96.75:8000/homepage
 
 # Test specific pages
-curl -f -s http://3.137.209.211:8000/freelancersignup
-curl -f -s http://3.137.209.211:8000/contactus
+curl -f -s http://16.24.96.75:8000/freelancersignup
+curl -f -s http://16.24.96.75:8000/contactus
 
 # View container logs (if running locally)
 docker-compose logs web
