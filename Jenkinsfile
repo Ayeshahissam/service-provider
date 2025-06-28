@@ -113,14 +113,71 @@ pipeline {
                 
                 sh '''
                     echo "Checking if application is running..."
-                    if curl -f -s http://localhost:8000 > /dev/null; then
+                    if curl -f -s http://18.216.19.144:8000/homepage > /dev/null; then
                         echo "✅ Application is running successfully!"
+                        echo "Application accessible at: http://18.216.19.144:8000/homepage"
                     else
                         echo "⚠️ Application may still be starting up"
                         echo "Container logs:"
                         cd source && docker-compose logs --tail=10 web
                     fi
                 '''
+            }
+        }
+        
+        stage('Run Automated Tests') {
+            steps {
+                echo 'Running Selenium automated tests...'
+                
+                sh '''
+                    cd source
+                    echo "Building test container..."
+                    docker build -f Dockerfile.test -t service-provider-tests .
+                    
+                    echo "Running automated test suite..."
+                    docker run --rm \
+                        --network="host" \
+                        -e BASE_URL=http://18.216.19.144:8000 \
+                        -v "$(pwd)/test-results:/app/test-results" \
+                        service-provider-tests \
+                        || true
+                    
+                    echo "Test execution completed"
+                '''
+            }
+            
+            post {
+                always {
+                    // Archive test results and reports
+                    sh '''
+                        cd source
+                        # Create test-results directory if it doesn't exist
+                        mkdir -p test-results
+                        
+                        # Copy test reports if they exist
+                        if [ -f test-report.html ]; then
+                            cp test-report.html test-results/
+                            echo "✅ Test report archived"
+                        fi
+                        
+                        # List test results
+                        echo "Test results:"
+                        ls -la test-results/ || echo "No test results found"
+                    '''
+                    
+                    // Archive artifacts
+                    archiveArtifacts artifacts: 'source/test-results/**/*', allowEmptyArchive: true
+                    
+                    // Publish HTML reports if available
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'source/test-results',
+                        reportFiles: 'test-report.html',
+                        reportName: 'Selenium Test Report'
+                    ])
+                }
             }
         }
     }
@@ -132,10 +189,12 @@ pipeline {
         
         success {
             echo '''
-            🎉 BUILD SUCCESSFUL! 🎉
+            🎉 BUILD & TEST SUCCESSFUL! 🎉
             
             ✅ Application deployed successfully
-            🌐 Access: http://YOUR_EC2_IP:8000
+            ✅ All automated tests passed
+            🌐 Access: http://18.216.19.144:8000/homepage
+            📊 Test Report: Check Jenkins artifacts for test-report.html
             
             To check status: docker-compose ps
             To view logs: docker-compose logs
@@ -144,16 +203,24 @@ pipeline {
         
         failure {
             echo '''
-            ❌ BUILD FAILED!
+            ❌ BUILD OR TEST FAILED!
             
             Check the logs above for errors.
             Most common issues:
+            Build phase:
             - Python/pip not installed
             - Docker not running
             - Port 8000 already in use
             
+            Test phase:
+            - Application not accessible on http://18.216.19.144:8000
+            - Chrome/ChromeDriver issues in container
+            - Test timeout due to slow page loads
+            - Network connectivity issues from Jenkins to EC2
+            
             Manual cleanup if needed:
             sudo rm -rf /var/lib/jenkins/workspace/serviceprovider
+            docker system prune -f
             '''
         }
     }
