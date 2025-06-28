@@ -39,7 +39,7 @@ COPY pytest.ini .
 
 # Set environment variables for headless operation
 ENV DISPLAY=:99
-ENV BASE_URL=http://18.216.19.144:8000
+ENV BASE_URL=http://3.137.209.211:8000
 
 # Run tests
 CMD ["pytest", "test_service_provider.py", "-v", "--html=test-report.html", "--self-contained-html"] 

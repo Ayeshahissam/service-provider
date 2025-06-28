@@ -4,7 +4,7 @@ REM This script runs the automated test suite against the deployed application
 
 echo 🚀 Local Xperts - Automated Test Suite
 echo ======================================
-echo Application URL: http://18.216.19.144:8000/homepage
+echo Application URL: http://3.137.209.211:8000/homepage
 echo.
 
 REM Check if pytest is available
@@ -15,7 +15,7 @@ if errorlevel 1 (
 )
 
 REM Set environment variables
-set BASE_URL=http://18.216.19.144:8000
+set BASE_URL=http://3.137.209.211:8000
 
 echo 🔍 Running pre-test validation...
 python validate_deployment.py

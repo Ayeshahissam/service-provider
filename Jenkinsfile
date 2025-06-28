@@ -113,9 +113,9 @@ pipeline {
                 
                 sh '''
                     echo "Checking if application is running..."
-                    if curl -f -s http://18.216.19.144:8000/homepage > /dev/null; then
-                        echo "✅ Application is running successfully!"
-                        echo "Application accessible at: http://18.216.19.144:8000/homepage"
+                    if curl -f -s http://3.137.209.211:8000/homepage > /dev/null; then
+                        echo "\u2705 Application is running successfully!"
+                        echo "Application accessible at: http://3.137.209.211:8000/homepage"
                     else
                         echo "⚠️ Application may still be starting up"
                         echo "Container logs:"
@@ -137,7 +137,7 @@ pipeline {
                     echo "Running automated test suite..."
                     docker run --rm \
                         --network="host" \
-                        -e BASE_URL=http://18.216.19.144:8000 \
+                        -e BASE_URL=http://3.137.209.211:8000 \
                         -v "$(pwd)/test-results:/app/test-results" \
                         service-provider-tests \
                         || true
@@ -193,7 +193,7 @@ pipeline {
             
             ✅ Application deployed successfully
             ✅ All automated tests passed
-            🌐 Access: http://18.216.19.144:8000/homepage
+            🌐 Access: http://3.137.209.211:8000/homepage
             📊 Test Report: Check Jenkins artifacts for test-report.html
             
             To check status: docker-compose ps
@@ -213,7 +213,7 @@ pipeline {
             - Port 8000 already in use
             
             Test phase:
-            - Application not accessible on http://18.216.19.144:8000
+            - Application not accessible on http://3.137.209.211:8000
             - Chrome/ChromeDriver issues in container
             - Test timeout due to slow page loads
             - Network connectivity issues from Jenkins to EC2

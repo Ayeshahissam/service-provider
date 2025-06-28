@@ -38,7 +38,7 @@ def driver():
 @pytest.fixture
 def base_url():
     """Base URL for the application - EC2 deployment URL"""
-    return os.getenv('BASE_URL', 'http://18.216.19.144:8000')
+    return os.getenv('BASE_URL', 'http://3.137.209.211:8000')
 
 def generate_unique_username():
     """Generate a unique username for testing"""

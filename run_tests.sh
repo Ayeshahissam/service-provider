@@ -5,7 +5,7 @@
 
 echo "🚀 Local Xperts - Automated Test Suite"
 echo "======================================"
-echo "Application URL: http://18.216.19.144:8000/homepage"
+echo "Application URL: http://3.137.209.211:8000/homepage"
 echo ""
 
 # Check if test dependencies are installed
@@ -15,7 +15,7 @@ if ! command -v pytest &> /dev/null; then
 fi
 
 # Set environment variables
-export BASE_URL=http://18.216.19.144:8000
+export BASE_URL=http://3.137.209.211:8000
 
 echo "🔍 Running pre-test validation..."
 python validate_deployment.py

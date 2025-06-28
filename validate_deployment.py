@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-BASE_URL = "http://18.216.19.144:8000"
+BASE_URL = "http://3.137.209.211:8000"
 
 def test_application_accessibility():
     """Test if the application is accessible via HTTP requests"""
